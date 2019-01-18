@@ -5,10 +5,9 @@ license:             Zlib
 license-file:        LICENSE
 author:              Pedro Henrique Lara Campos
 maintainer:          root@pedrohlc.com
-extra-source-files:  CHANGELOG.md
 
 library
-  exposed-modules:     Identity
+  exposed-modules:     Compute, Identity
   build-depends:       base ^>=4.12.0.0
                        , aeson ^>=1.4.2.0
                        , bytestring ^>= 0.10.8.2

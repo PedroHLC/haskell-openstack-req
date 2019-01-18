@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Identity (authTokens) where
+module Identity (authTokens, projects, revokeToken, test) where
 
 -- FROM: https://developer.openstack.org/api-ref/identity/v3
 
@@ -17,6 +17,9 @@ import Network.HTTP.Req
 --
 -- HELPER
 --
+apiVersion :: Text
+apiVersion = "v3"
+
 headerToken :: ByteString -> Option scheme
 headerToken val =
     header "X-Auth-Token" val
@@ -153,7 +156,7 @@ authTokens domain name password _host _port =
                         ]
                     ]
                 ]
-        url = https _host /: "v3" /: "auth" /: "tokens"
+        url = https _host /: apiVersion /: "auth" /: "tokens"
         request = req POST url
             (ReqBodyJson payload)
             (jsonResponse)
@@ -169,7 +172,7 @@ authTokens domain name password _host _port =
 
 projects :: ByteString -> Text -> Int -> IO (Int, ProjectsResponse)
 projects _token _host _port =
-    let url = https _host /: "v3" /: "projects"
+    let url = https _host /: apiVersion /: "projects"
         request = req GET url NoReqBody jsonResponse
             (port _port <> headerToken _token )
             :: Req (JsonResponse ProjectsResponse)
@@ -182,7 +185,7 @@ projects _token _host _port =
 
 revokeToken :: ByteString -> ByteString -> Text -> Int -> IO (Int)
 revokeToken toRevoke _token _host _port =
-    let url = https _host /: "v3" /: "projects"
+    let url = https _host /: apiVersion /: "projects"
         request = req GET url NoReqBody ignoreResponse
             ( port _port
             <> headerToken _token
